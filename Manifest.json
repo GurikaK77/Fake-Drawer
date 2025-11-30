@@ -3,16 +3,14 @@
   "short_name": "Artist",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#050510",
-  "theme_color": "#bc13fe",
-  "description": "Cyber Noir Drawing Game",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00d2ff",
   "orientation": "portrait",
   "icons": [
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
