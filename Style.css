@@ -1,108 +1,182 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
 
 :root {
-    --bg-dark: #050510;
-    --bg-panel: rgba(20, 20, 35, 0.7);
+    --bg-dark: #0a0a12;
+    --bg-panel: rgba(20, 20, 35, 0.9);
     --neon-purple: #bc13fe;
     --neon-blue: #00f3ff;
     --neon-pink: #ff0055;
     --gold: #ffd700;
     --text-main: #ffffff;
-    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-    --radius: 20px;
+    --text-muted: #a0a0c0;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+    --radius: 16px;
+    --font-main: 'Rajdhani', sans-serif;
+    --font-title: 'Cinzel', serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
     background-color: var(--bg-dark);
-    background-image: radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.1) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.1) 0%, transparent 40%);
-    color: var(--text-main); font-family: 'Rajdhani', sans-serif;
+    background-image: radial-gradient(circle at 50% 0%, rgba(188, 19, 254, 0.2) 0%, transparent 50%);
+    color: var(--text-main); font-family: var(--font-main);
     min-height: 100vh; overflow-x: hidden; touch-action: manipulation;
 }
 
-/* Particles */
-.particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-.particle { position: absolute; background: white; border-radius: 50%; opacity: 0.2; animation: float 8s infinite; }
-@keyframes float { 0% { transform: translateY(100vh); } 100% { transform: translateY(-100px); } }
+/* --- Layout --- */
+.container { 
+    max-width: 600px; 
+    margin: 0 auto; 
+    padding: 20px; 
+    min-height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start; /* უკეთესია მობილურისთვის */
+}
 
-/* General Layout */
-.container { max-width: 600px; margin: 0 auto; padding: 15px; min-height: 100vh; display: flex; flex-direction: column; }
-.logo-area { text-align: center; margin-bottom: 20px; padding: 20px 0; }
-.logo h1 { font-family: 'Cinzel', serif; font-size: 4rem; background: linear-gradient(to right, var(--neon-purple), var(--neon-blue)); -webkit-background-clip: text; color: transparent; text-shadow: 0 5px 20px rgba(188, 19, 254, 0.3); }
+.logo-area { text-align: center; margin-bottom: 30px; margin-top: 10px; }
+.logo h1 { 
+    font-family: var(--font-title); 
+    font-size: 3.5rem; 
+    background: linear-gradient(to right, var(--neon-purple), var(--neon-blue)); 
+    -webkit-background-clip: text; 
+    color: transparent; 
+    letter-spacing: 5px;
+    text-shadow: 0 0 30px rgba(188, 19, 254, 0.3);
+}
 
-/* Sections */
+/* --- Sections --- */
 .section { 
-    background: var(--bg-panel); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border: var(--glass-border); border-radius: var(--radius); padding: 25px; margin-bottom: 20px;
-    display: none; animation: slideUp 0.4s ease;
+    background: var(--bg-panel); 
+    border: var(--glass-border); 
+    border-radius: var(--radius); 
+    padding: 25px; 
+    margin-bottom: 20px; 
+    display: none; 
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
-.section.active { display: block; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.section.active { display: block; animation: fadeIn 0.4s ease; }
+.centered-content { text-align: center; align-items: center; display: flex; flex-direction: column; }
 
-/* Centered Sections */
-#roleSection.active, #drawingSection.active, #resultSection.active {
-    display: flex; flex-direction: column; align-items: center; text-align: center;
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- Forms & Inputs --- */
+.input-with-button { display: flex; gap: 10px; margin-bottom: 15px; }
+input, select { 
+    width: 100%; padding: 15px; 
+    background: rgba(0,0,0,0.4); 
+    border: 1px solid #444; 
+    border-radius: 12px; 
+    color: white; 
+    font-family: var(--font-main);
+    font-size: 1.1rem; 
+    outline: none;
 }
-#roleSection.active ~ #logoArea, #drawingSection.active ~ #logoArea, #resultSection.active ~ #logoArea { display: none !important; }
+input:focus, select:focus { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); }
 
-/* Buttons & Inputs */
+/* --- Buttons --- */
 .btn {
-    width: 100%; padding: 15px; border: 2px solid var(--neon-purple); background: transparent;
-    color: white; font-family: 'Orbitron', sans-serif; text-transform: uppercase; font-size: 1rem;
-    border-radius: 50px; cursor: pointer; transition: 0.3s; display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+    width: 100%; padding: 16px; 
+    border: none; background: linear-gradient(45deg, var(--neon-purple), #8a2be2);
+    color: white; font-family: 'Orbitron', sans-serif; text-transform: uppercase; 
+    font-weight: bold; font-size: 1rem; border-radius: 12px; 
+    cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(188, 19, 254, 0.3);
+    display: inline-flex; justify-content: center; align-items: center; gap: 10px;
 }
-.btn:hover { background: var(--neon-purple); box-shadow: 0 0 20px var(--neon-purple); transform: translateY(-2px); }
-.btn-secondary { border-color: #666; color: #ccc; } .btn-secondary:hover { background: #444; }
+.btn:active { transform: scale(0.98); }
+.btn-icon { width: 60px; flex-shrink: 0; font-size: 1.2rem; }
+.btn-secondary { background: #333; color: #ccc; box-shadow: none; border: 1px solid #555; }
+.btn-danger-text { 
+    background: transparent; color: var(--neon-pink); 
+    box-shadow: none; border: 1px solid var(--neon-pink); 
+    margin-top: 15px; font-size: 0.9rem; padding: 10px;
+}
 
-input, select { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 12px; color: white; font-size: 1.1rem; }
-.input-with-button { display: flex; gap: 10px; margin-bottom: 20px; }
+/* --- Player List --- */
+.player-list { margin-bottom: 20px; max-height: 40vh; overflow-y: auto; }
+.player-item { 
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px; background: rgba(255,255,255,0.03); 
+    margin-bottom: 8px; border-radius: 12px; border-left: 4px solid var(--neon-blue); 
+}
+.remove-btn { color: var(--neon-pink); background: none; border: none; font-size: 1.2rem; padding: 5px; }
 
-/* Player List */
-.player-list { margin-bottom: 20px; max-height: 300px; overflow-y: auto; }
-.player-item { display: flex; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.05); margin-bottom: 8px; border-radius: 10px; border-left: 3px solid var(--neon-blue); }
-.remove-btn { color: var(--neon-pink); background: none; border: none; font-size: 1.2rem; cursor: pointer; }
-
-/* Role Card */
-.role-card { width: 280px; height: 380px; perspective: 1000px; margin: 30px 0; cursor: pointer; }
-.role-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s; transform-style: preserve-3d; }
+/* --- Role Card (Improved) --- */
+.role-card { 
+    width: 100%; max-width: 320px; height: 420px; 
+    perspective: 1000px; margin: 20px 0; cursor: pointer; 
+}
+.role-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
 .role-card.flipped .role-card-inner { transform: rotateY(180deg); }
-.role-card-front, .role-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(135deg, rgba(20,20,35,0.9), rgba(40,10,60,0.9)); padding: 20px; }
+.role-card-front, .role-card-back { 
+    position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px; 
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    background: linear-gradient(145deg, #151520, #0a0a10); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    padding: 20px;
+}
+.role-card-front { border: 2px solid var(--neon-purple); }
 .role-card-back { transform: rotateY(180deg); border: 2px solid var(--neon-blue); }
-.role-icon { font-size: 4rem; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--neon-purple)); }
-.role-info-title { color: #888; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 2px; }
-.role-info-value { font-size: 2.2rem; color: var(--gold); font-family: 'Cinzel', serif; margin-bottom: 25px; text-shadow: 0 0 15px var(--gold); }
-.role-secret { color: var(--neon-pink); text-shadow: 0 0 15px var(--neon-pink); }
 
-/* Drawing Canvas */
+.role-icon { font-size: 5rem; margin-bottom: 20px; color: var(--text-muted); }
+.role-text { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; }
+
+/* Role Reveal Styles */
+.role-label { font-size: 0.9rem; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+.role-value-big { 
+    font-size: 2.5rem; font-family: var(--font-title); font-weight: bold; 
+    color: var(--gold); margin-bottom: 30px; text-shadow: 0 0 15px rgba(255, 215, 0, 0.3); line-height: 1.2;
+}
+.role-spy { color: var(--neon-pink); text-shadow: 0 0 20px var(--neon-pink); font-size: 3rem; }
+
+/* --- Drawing Section --- */
 .draw-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px; }
-.drawer-name { font-size: 1.8rem; font-family: 'Cinzel', serif; }
-.color-indicator { padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; text-shadow: 0 0 5px black; }
+.drawer-name { font-size: 1.5rem; font-family: var(--font-title); color: white; }
+.color-indicator { 
+    padding: 8px 15px; border-radius: 50px; font-weight: bold; font-size: 0.9rem; 
+    border: 2px solid #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
 
-.canvas-wrapper { width: 100%; height: 400px; background: #000; border: 2px solid #333; border-radius: 15px; overflow: hidden; position: relative; touch-action: none; margin-bottom: 15px; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
+.canvas-wrapper {
+    width: 100%; height: 55vh; /* Responsive Height */
+    background: #ffffff; border: 8px solid #222; border-radius: 15px;
+    overflow: hidden; position: relative; touch-action: none; 
+    margin-bottom: 15px; box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
 canvas { display: block; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
-.draw-instruction { color: #888; margin-bottom: 15px; font-size: 0.9rem; }
+.draw-instruction { color: var(--text-muted); text-align: center; margin-bottom: 15px; font-size: 0.9rem; }
 
-/* Result */
-.final-art-container { width: 100%; background: #000; padding: 10px; border-radius: 15px; border: 1px solid #333; margin-bottom: 25px; }
+/* --- Results --- */
+.final-art-container { width: 100%; background: #fff; padding: 10px; border-radius: 15px; margin-bottom: 25px; border: 4px solid #222; }
 #finalImage { width: 100%; height: auto; display: block; border-radius: 5px; }
-.spy-reveal-container { margin: 20px 0; animation: zoomIn 0.8s ease; }
-.spy-name-big { font-size: 3.5rem; font-weight: 800; color: var(--neon-pink); text-shadow: 0 0 30px var(--neon-pink); font-family: 'Cinzel', serif; }
-@keyframes zoomIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.spy-reveal-container { margin: 30px 0; text-align: center; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.spy-name-big { font-size: 3.5rem; font-weight: 800; color: var(--neon-pink); font-family: var(--font-title); margin-top: 10px; }
+.word-reveal { font-size: 1.5rem; color: var(--neon-blue); margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; }
+
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 /* Player Turn Text */
-.player-turn { font-size: 3rem; font-weight: 800; text-align: center; margin-bottom: 2rem; color: var(--text-main); font-family: 'Cinzel', serif; text-shadow: 0 0 20px var(--neon-purple); line-height: 1.2; animation: pulse 2s infinite; }
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+.player-turn { font-size: 3rem; font-weight: 800; text-align: center; margin-bottom: 2rem; color: white; font-family: var(--font-title); text-shadow: 0 0 20px var(--neon-purple); line-height: 1.1; }
 
-/* Intro Screen */
+/* Config Mini */
+.config-mini { color: #888; font-size: 0.9rem; display: flex; flex-direction: column; gap: 5px; margin-top: 15px; }
+
+/* Screens */
 #readyScreen, #loadingScreen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 999; display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 20px; }
-.ready-content { background: rgba(255,255,255,0.03); padding: 40px; border-radius: 30px; backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); max-width: 500px; width: 90%; }
-.im-ready { margin-top: 30px; font-size: 1.5rem; padding: 15px 40px; }
+.ready-content { width: 100%; max-width: 450px; }
+.im-ready { margin-top: 40px; font-size: 1.3rem; padding: 20px; }
 
-/* Mobile */
+/* Mobile Optimizations */
 @media (max-width: 600px) {
-    .logo h1 { font-size: 3rem; }
-    .role-card { width: 100%; height: 350px; }
-    .spy-name-big { font-size: 3rem; }
+    .container { padding: 15px; }
+    .logo h1 { font-size: 2.8rem; }
+    .role-card { height: 380px; }
+    .spy-name-big { font-size: 2.8rem; }
     .player-turn { font-size: 2.2rem; }
+    .btn { padding: 14px; font-size: 0.95rem; }
+    .canvas-wrapper { height: 50vh; }
 }
