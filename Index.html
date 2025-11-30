@@ -4,8 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
     <title>Cyber Artist</title>
+    
     <link rel="icon" type="image/png" href="icons/icon-512x512.png">
     <link rel="apple-touch-icon" href="icons/icon-512x512.png">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -23,8 +25,8 @@
                 <h1>ARTIST</h1>
                 <p>Cyber Noir Edition</p>
             </div>
-            <h2>იპოვე მატყუარა</h2>
-            <p>ყველა ხატავს ერთ ნახატს. ერთმა არ იცის რა იხატება. <br>შენი მიზანია იპოვო ის.</p>
+            <h2>იპოვე ჯაშუში</h2>
+            <p>ყველა ხატავს ერთ ნახატს. ერთმა არ იცის რა იხატება.</p>
             <button class="btn im-ready" onclick="showMainPage()">
                 <i class="fas fa-power-off"></i> დაწყება
             </button>
@@ -43,9 +45,9 @@
 
         <div id="playerInput" class="section">
             <div class="input-with-button">
-                <input type="text" id="playerName" placeholder="მოთამაშის სახელი" />
-                <button class="btn" onclick="addPlayer()">
-                    <i class="fas fa-plus"></i> დამატება
+                <input type="text" id="playerName" placeholder="მოთამაშის სახელი" autocomplete="off" />
+                <button class="btn btn-icon" onclick="addPlayer()">
+                    <i class="fas fa-plus"></i>
                 </button>
             </div>
             <div class="player-list" id="playerList"></div>
@@ -53,7 +55,7 @@
             <div class="config-mini">
                 <label>სიტყვების კატეგორია:</label>
                 <select id="wordCategory">
-                    <option value="mix">შერეული</option>
+                    <option value="mix">შერეული (მარტივი)</option>
                     <option value="objects">ნივთები</option>
                     <option value="animals">ცხოველები</option>
                     <option value="places">ადგილები</option>
@@ -65,25 +67,25 @@
             </button>
         </div>
 
-        <div id="roleSection" class="section">
+        <div id="roleSection" class="section centered-content">
             <div class="player-turn" id="playerTurn"></div>
             
             <div class="role-card" id="roleCard" onclick="revealRole()">
                 <div class="role-card-inner">
                     <div class="role-card-front" id="roleCardFront">
                         <div class="role-icon"><i class="fas fa-fingerprint"></i></div>
-                        <div class="role-text" style="font-size:1rem; margin-top:10px">დააჭირე დავალების სანახავად</div>
+                        <div class="role-text">დააჭირე როლის სანახავად</div>
                     </div>
                     <div class="role-card-back" id="roleCardBack"></div>
                 </div>
             </div>
             
-            <button class="btn next-player-btn" id="goToDrawBtn" onclick="goToDrawing()" style="display:none; margin-top:20px;">
-                <i class="fas fa-paint-brush"></i> ხატვა
+            <button class="btn next-player-btn" id="goToDrawBtn" onclick="goToDrawing()" style="display:none; margin-top:30px;">
+                <i class="fas fa-paint-brush"></i> გადასვლა ხატვაზე
             </button>
         </div>
 
-        <div id="drawingSection" class="section">
+        <div id="drawingSection" class="section full-height-section">
             <div class="draw-header">
                 <div id="drawerName" class="drawer-name"></div>
                 <div class="color-indicator" id="colorIndicator">შენი ფერი</div>
@@ -95,14 +97,18 @@
             
             <p class="draw-instruction">გაავლე მხოლოდ ერთი ხაზი!</p>
 
-            <div class="controls">
-                <button class="btn" onclick="finishTurn()">
+            <div class="controls-row">
+                <button class="btn btn-success" onclick="finishTurn()">
                     <i class="fas fa-check"></i> დასრულება
                 </button>
             </div>
+            
+            <button class="btn btn-danger-text" onclick="forceEndGame()">
+                <i class="fas fa-flag-checkered"></i> თამაშის შეწყვეტა და გამოცნობა
+            </button>
         </div>
 
-        <div id="resultSection" class="section">
+        <div id="resultSection" class="section centered-content">
             <div class="result-title">ნახატი დასრულდა!</div>
             
             <div class="final-art-container">
@@ -110,16 +116,16 @@
             </div>
 
             <div class="result-display" id="votingArea">
-                <p>ვინ არის მატყუარა მხატვარი?</p>
+                <p>ვინ არის ჯაშუში?</p>
                 <select id="findSpySelect"></select>
                 <button class="btn" onclick="revealResult()" style="margin-top:15px;">
-                    <i class="fas fa-eye"></i> გამოაშკარავება
+                    <i class="fas fa-eye"></i> ვინაობის გაგება
                 </button>
             </div>
 
             <div id="finalResult" style="display:none;">
                 <div class="spy-reveal-container">
-                    <div class="spy-label">მატყუარა იყო</div>
+                    <div class="spy-label">ჯაშუში იყო</div>
                     <div class="spy-name-big" id="fakeArtistName"></div>
                 </div>
                 <div class="word-reveal" id="wordReveal"></div>
@@ -129,7 +135,7 @@
                 <button class="btn btn-secondary" onclick="restartGame()">
                     <i class="fas fa-redo"></i> ახალი თამაში
                 </button>
-                <button class="btn" onclick="showPlayerInput()">
+                <button class="btn" onclick="showMainPage()">
                     <i class="fas fa-home"></i> მთავარი
                 </button>
             </div>
@@ -140,7 +146,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js');
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Error:', err));
             });
         }
     </script>
