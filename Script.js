@@ -12,27 +12,19 @@ const colors = [
 
 const wordData = {
     "mix": [
-        // ორიგინალი
         "ვაშლი", "მანქანა", "სახლი", "მზე", "თვითმფრინავი", "ყვავილი", "ხე", "ჭიქა", "გული", "ვარსკვლავი", "ნავი", "ბურთი", "თევზი", "ტელეფონი",
-        // დამატებული
         "მთვარე", "ღრუბელი", "ველოსიპედი", "გიტარა", "ნაყინი", "რობოტი", "ცეცხლი", "წყალი", "თოვლი", "წვიმა", "ქოლგა", "კომპიუტერი", "საჩუქარი", "ბუშტი", "ფული", "დროშა", "სანთელი", "ტორტი", "ღიმილი", "თვალი", "ხელი", "მუსიკა", "ზარი", "გვირგვინი", "ბრილიანტი", "ელვა", "ცისარტყელა", "მოჩვენება", "კუდი", "ფრთა"
     ],
     "objects": [
-        // ორიგინალი
         "ტელეფონი", "სკამი", "საათი", "სათვალე", "ქუდი", "ბურთი", "წიგნი", "გასაღები", "ლამპა", "ფეხსაცმელი",
-        // დამატებული
         "მაგიდა", "კარადა", "სარკე", "სავარცხელი", "მაკრატელი", "კალამი", "ფანქარი", "ჩანთა", "საფულე", "დანა", "ჩანგალი", "კოვზი", "თეფში", "ქვაბი", "ტელევიზორი", "ლეპტოპი", "ყურსასმენი", "საბანი", "ბალიში", "ხალიჩა", "ცოცხი", "ვედრო", "საპონი", "პირსახოცი", "კბილის ჯაგრისი", "ფოტოაპარატი", "ბეჭედი", "ყელსაბამი", "ღილაკი", "სათამაშო"
     ],
     "animals": [
-        // ორიგინალი
         "კატა", "ძაღლი", "სპილო", "ჟირაფი", "თევზი", "პეპელა", "ობობა", "გველი", "კუ", "დათვი",
-        // დამატებული
         "ლომი", "ვეფხვი", "მგელი", "მელა", "კურდღელი", "ცხენი", "ძროხა", "ღორი", "ცხვარი", "თხა", "მაიმუნი", "ზებრა", "ბეჰემოთი", "ნიანგი", "ზვიგენი", "დელფინი", "ვეშაპი", "რვაფეხა", "არწივი", "ბუ", "თუთიყუში", "მერცხალი", "ქათამი", "იხვი", "ბაყაყი", "ზღარბი", "ციყვი", "ჭიანჭველა", "ფუტკარი", "ლოკოკინა"
     ],
     "places": [
-        // ორიგინალი
         "მთა", "ზღვა", "ტყე", "პარკი", "სკოლა", "საავადმყოფო", "მაღაზია", "ხიდი", "პლაჟი", "ქალაქი",
-        // დამატებული
         "სოფელი", "მდინარე", "ტბა", "ჩანჩქერი", "უდაბნო", "კუნძული", "გამოქვაბული", "ვულკანი", "კოსმოსი", "მუზეუმი", "თეატრი", "კინოთეატრი", "სტადიონი", "აუზი", "რესტორანი", "კაფე", "ბიბლიოთეკა", "აეროპორტი", "სადგური", "ეკლესია", "ციხესიმაგრე", "სასახლე", "ზოოპარკი", "ცირკი", "ეზო", "ბაღი", "ქუჩა", "სამზარეულო", "საძინებელი", "აბაზანა"
     ]
 };
@@ -55,7 +47,6 @@ window.onload = function() {
         const saved = localStorage.getItem('fakeArtistState');
         if (saved) {
             const data = JSON.parse(saved);
-            // Validation check to prevent crashes
             if (!data.players || !Array.isArray(data.players)) {
                 localStorage.removeItem('fakeArtistState');
             }
@@ -91,7 +82,7 @@ function setActiveSection(id) {
     const target = document.getElementById(id);
     if(target) {
         target.style.display = 'flex';
-        target.style.flexDirection = 'column'; // Ensure flex layout
+        target.style.flexDirection = 'column'; 
         setTimeout(() => target.classList.add('active'), 10);
     }
     
@@ -113,7 +104,6 @@ function initCanvas() {
     canvas.addEventListener('mouseup', stopDraw);
     canvas.addEventListener('mouseout', stopDraw);
     
-    // Passive: false prevents scrolling on iOS/Android while drawing
     canvas.addEventListener('touchstart', (e) => { 
         if(e.target === canvas) e.preventDefault(); 
         startDraw(e.touches[0]); 
@@ -236,7 +226,6 @@ function revealRole() {
     
     if (navigator.vibrate) navigator.vibrate(50);
 
-    // --- LOGIC CHANGE FOR TEXT ---
     if (role === "Fake") {
         back.innerHTML = `
             <div class="role-label">შენი როლი</div>
@@ -282,12 +271,13 @@ function finishTurn() {
     }
 }
 
-// --- NEW FEATURE: FORCE END GAME ---
 function forceEndGame() {
     if(confirm("ნამდვილად გსურთ თამაშის შეწყვეტა და ჯაშუშის გამოცნობა?")) {
         endGame();
     }
 }
+
+// --- UPDATED ENDGAME & REVEAL LOGIC ---
 
 function endGame() {
     setActiveSection("resultSection");
@@ -301,23 +291,43 @@ function endGame() {
         select.innerHTML += `<option value="${i}">${p.name}</option>`;
     });
     
+    // 1. გამოვაჩინოთ ხმის მიცემის ველი
     document.getElementById("votingArea").style.display = "block";
+    
+    // 2. დავმალოთ შედეგი
     document.getElementById("finalResult").style.display = "none";
+    
+    // 3. დავმალოთ მთავარი ღილაკები (Restart / Home)
+    const buttonsContainer = document.getElementById("endGameButtons");
+    if(buttonsContainer) buttonsContainer.style.display = "none";
+    
     savePersistentData();
 }
 
 function revealResult() {
-    const guessIdx = document.getElementById("findSpySelect").value;
-    if(guessIdx === "") return;
+    const select = document.getElementById("findSpySelect");
+    const guessIdx = select.value;
+    
+    if(guessIdx === "") {
+        alert("გთხოვთ აირჩიოთ სავარაუდო ჯაშუში!");
+        return;
+    }
     
     const fakeIdx = roles.indexOf("Fake");
     const fakeName = players[fakeIdx].name;
     
+    // 1. დავმალოთ ხმის მიცემის ველი
     document.getElementById("votingArea").style.display = "none";
+    
+    // 2. გამოვაჩინოთ ვინაობა
     document.getElementById("finalResult").style.display = "block";
     
     document.getElementById("fakeArtistName").textContent = fakeName;
     document.getElementById("wordReveal").innerHTML = `სიტყვა იყო: <span style="color:white; font-weight:bold">${secretWord}</span>`;
+
+    // 3. გამოვაჩინოთ მთავარი ღილაკები
+    const buttonsContainer = document.getElementById("endGameButtons");
+    if(buttonsContainer) buttonsContainer.style.display = "flex";
 }
 
 // --- PLAYERS ---
