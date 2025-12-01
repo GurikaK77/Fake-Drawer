@@ -1,57 +1,75 @@
-const CACHE_NAME = 'cyber-artist-v1';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'artist-cyber-fast-v1'; // უნიკალური სახელი ამ პროექტისთვის
+const urlsToCache = [
   '/',
   '/index.html',
-  '/style.css',
+  '/style.css', 
   '/script.js',
   '/manifest.json',
-  '/icons/icon-512x512.png', // დარწმუნდი რომ ეს ფაილი არსებობს
-  // გარე რესურსების დაქეშვა (ფონტები და აიკონები)
+  // აიქონი (თუ კოდში base64-ით არაა, აქ უნდა იყოს)
+  // 'icons/icon-512.png', 
+
+  // გარე რესურსები (ზუსტად ის ლინკები, რაც HTML-შია):
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap'
 ];
 
-// ინსტალაცია: ფაილების ჩამოტვირთვა და შენახვა
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Service Worker: Caching Files');
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
-  );
-});
-
-// აქტივაცია: ძველი ქეშის წაშლა (თუ ვერსია შეიცვალა)
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            console.log('Service Worker: Clearing Old Cache');
-            return caches.delete(cache);
-          }
-        })
-      );
+// 1. ინსტალაცია: ფაილების ჩაწერა
+self.addEventListener('install', e => {
+  self.skipWaiting();
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(async cache => {
+      console.log('[SW] ARTIST: Cache Opening & Preloading...');
+      for (const url of urlsToCache) {
+        try {
+          await cache.add(url);
+        } catch (err) {
+          console.log('[SW] ვერ ჩაიწერა (არაუშავს):', url);
+        }
+      }
     })
   );
 });
 
-// მოთხოვნის დამუშავება: ჯერ ნახულობს ქეშში, თუ არაა - ინტერნეტში
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // თუ ფაილი ნაპოვნია ქეშში, აბრუნებს მას
-        if (response) {
-          return response;
-        }
-        // თუ არა, მიმართავს ინტერნეტს
-        return fetch(event.request).catch(() => {
-            // თუ ინტერნეტიც არაა და ქეშიც არაა (მაგალითად ახალ გვერდზე გადასვლა)
-            // აქ შეიძლება დავაბრუნოთ offline.html თუ გვაქვს, მაგრამ ამ თამაშისთვის საჭირო არაა
-        });
-      })
+// 2. აქტივაცია: ძველი ქეშის წაშლა
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) return caches.delete(key);
+        })
+      );
+    })
+  );
+  return self.clients.claim();
+});
+
+// 3. FETCH: სწრაფი გახსნა (Stale-While-Revalidate)
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+
+  // თუ მოთხოვნა API-ზეა, არ ვაკეშებთ (რომ ყოველთვის ახალი იყოს)
+  // თუ თქვენი API ლინკი შეიცავს სიტყვას "api", ეს ხაზი გამოტოვებს მას ქეშიდან:
+  if (e.request.url.includes('/api/')) {
+      return; 
+  }
+
+  e.respondWith(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.match(e.request).then(cachedResponse => {
+        const fetchPromise = fetch(e.request)
+          .then(networkResponse => {
+            if(networkResponse && networkResponse.status === 200) {
+               cache.put(e.request, networkResponse.clone());
+            }
+            return networkResponse;
+          })
+          .catch(() => {
+             console.log('Offline mode active');
+          });
+
+        return cachedResponse || fetchPromise;
+      });
+    })
   );
 });
